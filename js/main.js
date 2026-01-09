@@ -270,3 +270,82 @@ window.runCode = function(textareaId) {
         }
     }
 };
+// ========================================
+// PLAYGROUND - EDITOR EN VIVO
+// ========================================
+
+// Función para ejecutar el código del playground
+window.runCode = function() {
+    const htmlCode = document.getElementById('html-editor')?.value || '';
+    const cssCode = document.getElementById('css-editor')?.value || '';
+    const jsCode = document.getElementById('js-editor')?.value || '';
+    
+    const preview = document.getElementById('preview');
+    if (!preview) return;
+    
+    const previewDoc = preview.contentDocument || preview.contentWindow.document;
+    
+    // Construir el documento completo
+    const fullCode = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                ${cssCode}
+            </style>
+        </head>
+        <body>
+            ${htmlCode}
+            <script>
+                try {
+                    ${jsCode}
+                } catch (error) {
+                    document.body.innerHTML += '<div style="color: red; padding: 10px; background: #ffebee; border: 1px solid #f44336; margin: 10px; border-radius: 4px;"><strong>Error:</strong> ' + error.message + '</div>';
+                }
+            <\/script>
+        </body>
+        </html>
+    `;
+    
+    // Escribir en el iframe
+    previewDoc.open();
+    previewDoc.write(fullCode);
+    previewDoc.close();
+};
+
+// Función para limpiar un editor específico
+window.clearEditor = function(editorType) {
+    const editor = document.getElementById(`${editorType}-editor`);
+    if (editor) {
+        editor.value = '';
+        runCode();
+    }
+};
+
+// Auto-ejecutar cuando el usuario deja de escribir (debounce)
+let typingTimer;
+const doneTypingInterval = 1000; // 1 segundo
+
+function setupAutoRun() {
+    const editors = ['html-editor', 'css-editor', 'js-editor'];
+    
+    editors.forEach(editorId => {
+        const editor = document.getElementById(editorId);
+        if (editor) {
+            editor.addEventListener('input', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(runCode, doneTypingInterval);
+            });
+        }
+    });
+}
+
+// Inicializar el playground
+setTimeout(() => {
+    if (document.getElementById('playground')) {
+        setupAutoRun();
+        runCode();
+    }
+}, 500);

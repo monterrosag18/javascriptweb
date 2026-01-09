@@ -21,6 +21,73 @@
             <h2>¡Bienvenido a tu Aventura en JavaScript!</h2>
             <p>Esta es tu plataforma de lanzamiento para convertirte en un experto en JavaScript. Hemos reunido todo lo que necesitas, desde los conceptos más básicos hasta temas avanzados y profesionales.</p>
             <p>Usa el menú (haz clic en ☰) para navegar por los temas. Hemos marcado los temas que ya has visitado para que puedas seguir tu progreso. ¡Empieza a explorar y a practicar!</p>
+            
+            <hr style="margin: 30px 0;">
+            
+            <h2>🎨 Zona de Práctica en Vivo</h2>
+            <p>Escribe HTML, CSS y JavaScript y ve los resultados en tiempo real. ¡Experimenta libremente!</p>
+            
+            <div id="playground">
+                <div class="editors">
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <span class="editor-title">📄 HTML</span>
+                            <button class="clear-btn" onclick="clearEditor('html')">Limpiar</button>
+                        </div>
+                        <textarea id="html-editor" placeholder="Escribe tu HTML aquí..."><!-- Ejemplo: -->
+<h1>¡Hola Mundo!</h1>
+<p>Edita este código</p>
+<button id="miBoton">Haz clic</button></textarea>
+                    </div>
+                    
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <span class="editor-title">🎨 CSS</span>
+                            <button class="clear-btn" onclick="clearEditor('css')">Limpiar</button>
+                        </div>
+                        <textarea id="css-editor" placeholder="Escribe tu CSS aquí...">/* Ejemplo: */
+body {
+    font-family: Arial;
+    padding: 20px;
+}
+
+h1 {
+    color: #3498db;
+}
+
+button {
+    padding: 10px 20px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}</textarea>
+                    </div>
+                    
+                    <div class="editor-container">
+                        <div class="editor-header">
+                            <span class="editor-title">⚡ JavaScript</span>
+                            <button class="clear-btn" onclick="clearEditor('js')">Limpiar</button>
+                        </div>
+                        <textarea id="js-editor" placeholder="Escribe tu JavaScript aquí...">// Ejemplo:
+const boton = document.getElementById('miBoton');
+
+boton.addEventListener('click', function() {
+    alert('¡Funciona! 🎉');
+    boton.textContent = 'Clickeado!';
+});</textarea>
+                    </div>
+                </div>
+                
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <span class="preview-title">👁️ Vista Previa</span>
+                        <button class="refresh-btn" onclick="runCode()">▶️ Ejecutar</button>
+                    </div>
+                    <iframe id="preview"></iframe>
+                </div>
+            </div>
         </section>
     </main>
 
