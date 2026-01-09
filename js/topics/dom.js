@@ -8,7 +8,1158 @@ content.innerHTML = `
 
     <hr>
 
-    <h3>1. El Árbol Mágico: Cambiando el color de una fruta</h3>
+    <h3>📌 PARTE 1: Selectores del DOM - Cómo encontrar elementos en tu página</h3>
+    <p>El <strong>DOM (Document Object Model)</strong> es como un árbol genealógico de tu página HTML. Cada elemento (div, p, button, etc.) es un "nodo" en ese árbol.</p>
+    <p>Para poder modificar, mover o eliminar elementos, primero necesitas <strong>seleccionarlos</strong>. JavaScript te da varios métodos para hacerlo, cada uno con sus ventajas:</p>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎯 Método 1: getElementById() - Buscar por ID único</h4>
+        <p><strong>¿Cuándo usarlo?</strong> Cuando el elemento tiene un atributo <code>id</code> único.</p>
+        <p><strong>¿Qué devuelve?</strong> UN solo elemento (o null si no existe).</p>
+        <p><strong>Velocidad:</strong> ⚡⚡⚡ Muy rápido (el más rápido de todos).</p>
+        
+        <p><strong>Ejemplo práctico:</strong></p>
+        <textarea id="code-selector-1" readonly>// Supongamos que en tu HTML tienes:
+// <div id="miCaja">Este es el contenido de la caja</div>
+
+// 1. Seleccionamos el elemento por su ID
+const elemento = document.getElementById('miCaja');
+
+// 2. Ahora podemos leer su contenido
+console.log('Contenido:', elemento.textContent);
+
+// 3. O modificarlo
+elemento.textContent = 'Nuevo contenido';
+elemento.style.color = 'blue';
+
+// IMPORTANTE: NO uses el # antes del ID
+// ✅ Correcto: getElementById('miCaja')
+// ❌ Incorrecto: getElementById('#miCaja')</textarea>
+        <button onclick="runCode('code-selector-1')">Ejecutar</button>
+        <div class="output" id="output-selector-1"></div>
+        
+        <p><strong>💡 Caso de uso real:</strong> Perfecto para botones únicos, formularios, o cualquier elemento que sabes que existe una sola vez.</p>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎯 Método 2: getElementsByClassName() - Buscar por clase CSS</h4>
+        <p><strong>¿Cuándo usarlo?</strong> Cuando varios elementos comparten la misma clase CSS.</p>
+        <p><strong>¿Qué devuelve?</strong> Una <strong>HTMLCollection</strong> (parecida a un array) con TODOS los elementos que tengan esa clase.</p>
+        <p><strong>Velocidad:</strong> ⚡⚡ Rápido.</p>
+        
+        <p><strong>Ejemplo práctico:</strong></p>
+        <textarea id="code-selector-2" readonly>// HTML imaginario:
+// <div class="tarjeta">Tarjeta 1</div>
+// <div class="tarjeta">Tarjeta 2</div>
+// <div class="tarjeta">Tarjeta 3</div>
+
+// 1. Selecciona TODAS las tarjetas
+const tarjetas = document.getElementsByClassName('tarjeta');
+
+// 2. Veamos cuántas encontró
+console.log('Total de tarjetas:', tarjetas.length);
+
+// 3. Accede a la primera tarjeta (índice 0)
+console.log('Primera tarjeta:', tarjetas[0].textContent);
+
+// 4. Recorrer todas con un bucle
+for (let i = 0; i < tarjetas.length; i++) {
+    console.log('Tarjeta ' + (i + 1) + ':', tarjetas[i].textContent);
+}
+
+// IMPORTANTE: NO uses el punto (.) antes de la clase
+// ✅ Correcto: getElementsByClassName('tarjeta')
+// ❌ Incorrecto: getElementsByClassName('.tarjeta')</textarea>
+        <button onclick="runCode('code-selector-2')">Ejecutar</button>
+        <div class="output" id="output-selector-2"></div>
+        
+        <p><strong>💡 Caso de uso real:</strong> Ideal para listas de productos, galerías de imágenes, o cualquier grupo de elementos similares.</p>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎯 Método 3: getElementsByTagName() - Buscar por tipo de etiqueta HTML</h4>
+        <p><strong>¿Cuándo usarlo?</strong> Cuando quieres todos los elementos de un tipo específico (todos los párrafos, todos los botones, todas las imágenes, etc.).</p>
+        <p><strong>¿Qué devuelve?</strong> Una <strong>HTMLCollection</strong> con todos los elementos de ese tipo.</p>
+        <p><strong>Velocidad:</strong> ⚡⚡ Rápido.</p>
+        
+        <p><strong>Ejemplo práctico:</strong></p>
+        <textarea id="code-selector-3" readonly>// Ejemplo 1: Encontrar todos los párrafos <p>
+const parrafos = document.getElementsByTagName('p');
+console.log('Párrafos en la página:', parrafos.length);
+
+// Ejemplo 2: Encontrar todas las imágenes <img>
+const imagenes = document.getElementsByTagName('img');
+console.log('Imágenes en la página:', imagenes.length);
+
+// Ejemplo 3: Cambiar el color de TODOS los párrafos
+for (let i = 0; i < parrafos.length; i++) {
+    parrafos[i].style.color = 'green';
+}
+
+// Ejemplo 4: Encontrar todos los divs
+const divs = document.getElementsByTagName('div');
+console.log('Divs encontrados:', divs.length);</textarea>
+        <button onclick="runCode('code-selector-3')">Ejecutar</button>
+        <div class="output" id="output-selector-3"></div>
+        
+        <p><strong>💡 Caso de uso real:</strong> Útil cuando necesitas aplicar un estilo o comportamiento a todos los elementos de un tipo, sin importar su clase o ID.</p>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎯 Método 4: querySelector() - Selector CSS flexible (PRIMER elemento)</h4>
+        <p><strong>¿Cuándo usarlo?</strong> Cuando quieres usar selectores CSS complejos y solo necesitas el PRIMER elemento que coincida.</p>
+        <p><strong>¿Qué devuelve?</strong> UN solo elemento (el primero que encuentre) o null.</p>
+        <p><strong>Velocidad:</strong> ⚡ Moderado (pero muy flexible).</p>
+        
+        <p><strong>Ejemplo práctico con muchas opciones:</strong></p>
+        <textarea id="code-selector-4" readonly>// Ejemplo 1: Buscar por clase (con punto)
+const elemento1 = document.querySelector('.importante');
+console.log('Por clase:', elemento1);
+
+// Ejemplo 2: Buscar por ID (con #)
+const elemento2 = document.querySelector('#miCaja');
+console.log('Por ID:', elemento2);
+
+// Ejemplo 3: Buscar por atributo
+const elemento3 = document.querySelector('[type="text"]');
+console.log('Input tipo texto:', elemento3);
+
+// Ejemplo 4: Combinaciones complejas
+const primerBoton = document.querySelector('button.primary');
+console.log('Botón con clase primary:', primerBoton);
+
+// Ejemplo 5: Buscar dentro de un contenedor
+const primerParrafo = document.querySelector('section p');
+console.log('Primer párrafo dentro de section:', primerParrafo);
+
+// Ejemplo 6: Pseudo-selectores CSS
+const primerHijo = document.querySelector('div:first-child');
+console.log('Primer div hijo:', primerHijo);</textarea>
+        <button onclick="runCode('code-selector-4')">Ejecutar</button>
+        <div class="output" id="output-selector-4"></div>
+        
+        <p><strong>💡 Caso de uso real:</strong> Perfecto cuando necesitas flexibilidad y selectores complejos. Es la opción más moderna y recomendada.</p>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎯 Método 5: querySelectorAll() - Selector CSS flexible (TODOS los elementos)</h4>
+        <p><strong>¿Cuándo usarlo?</strong> Cuando quieres usar selectores CSS y necesitas TODOS los elementos que coincidan.</p>
+        <p><strong>¿Qué devuelve?</strong> Una <strong>NodeList</strong> (como un array) con todos los elementos que coincidan.</p>
+        <p><strong>Velocidad:</strong> ⚡ Moderado pero muy potente.</p>
+        
+        <p><strong>Ejemplo práctico completo:</strong></p>
+        <textarea id="code-selector-5" readonly>// Ejemplo 1: Todas las cajas con clase 'color-box'
+const cajas = document.querySelectorAll('.color-box');
+console.log('Cajas encontradas:', cajas.length);
+
+// Ejemplo 2: forEach es muy útil con querySelectorAll
+cajas.forEach((caja, index) => {
+    console.log('Caja ' + (index + 1) + ':', caja.className);
+    // También podemos modificarlas
+    caja.style.border = '2px solid red';
+});
+
+// Ejemplo 3: Todos los botones de la página
+const botones = document.querySelectorAll('button');
+console.log('Botones en la página:', botones.length);
+
+// Ejemplo 4: Selectores complejos
+const enlacesExternos = document.querySelectorAll('a[target="_blank"]');
+console.log('Enlaces externos:', enlacesExternos.length);
+
+// Ejemplo 5: Convertir a array real para usar métodos de array
+const cajasArray = Array.from(cajas);
+const primerasTres = cajasArray.slice(0, 3);
+console.log('Primeras 3 cajas:', primerasTres.length);</textarea>
+        <button onclick="runCode('code-selector-5')">Ejecutar</button>
+        <div class="output" id="output-selector-5"></div>
+        
+        <p><strong>💡 Caso de uso real:</strong> La opción más versátil y moderna. Perfecta para trabajar con múltiples elementos usando selectores CSS avanzados.</p>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>📊 TABLA COMPARATIVA COMPLETA</h4>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+                <tr style="background-color: #444;">
+                    <th style="border: 1px solid #666; padding: 10px;">Método</th>
+                    <th style="border: 1px solid #666; padding: 10px;">Sintaxis</th>
+                    <th style="border: 1px solid #666; padding: 10px;">¿Qué devuelve?</th>
+                    <th style="border: 1px solid #666; padding: 10px;">Velocidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>getElementById</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>('miId')</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;">1 elemento o null</td>
+                    <td style="border: 1px solid #666; padding: 10px;">⚡⚡⚡ Muy rápido</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>getElementsByClassName</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>('miClase')</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;">HTMLCollection (varios)</td>
+                    <td style="border: 1px solid #666; padding: 10px;">⚡⚡ Rápido</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>getElementsByTagName</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>('div')</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;">HTMLCollection (varios)</td>
+                    <td style="border: 1px solid #666; padding: 10px;">⚡⚡ Rápido</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>querySelector</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>('.clase')</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;">1 elemento o null</td>
+                    <td style="border: 1px solid #666; padding: 10px;">⚡ Moderado</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>querySelectorAll</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;"><code>('.clase')</code></td>
+                    <td style="border: 1px solid #666; padding: 10px;">NodeList (varios)</td>
+                    <td style="border: 1px solid #666; padding: 10px;">⚡ Moderado</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>🔥 Ejemplos de selectores CSS avanzados (para querySelector/All)</h4>
+        <pre><code>// Por clase
+document.querySelector('.miClase')
+
+// Por ID
+document.querySelector('#miId')
+
+// Por etiqueta
+document.querySelector('div')
+
+// Combinación: div con clase específica
+document.querySelector('div.miClase')
+
+// Hijo directo
+document.querySelector('div > p')
+
+// Atributo específico
+document.querySelector('input[type="email"]')
+
+// Múltiples clases
+document.querySelector('.clase1.clase2')
+
+// Pseudo-selectores
+document.querySelector('li:first-child')
+document.querySelector('div:hover')
+document.querySelector('input:checked')
+
+// Descendiente (cualquier nivel)
+document.querySelector('.contenedor .boton')
+
+// Hermano adyacente
+document.querySelector('h2 + p')
+
+// Por data-attribute
+document.querySelector('[data-id="123"]')
+</code></pre>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>✅ RECOMENDACIONES Y MEJORES PRÁCTICAS</h4>
+        <ul style="line-height: 1.8;">
+            <li><strong>Para proyectos modernos:</strong> Usa principalmente <code>querySelector()</code> y <code>querySelectorAll()</code>. Son más flexibles y el código es más fácil de leer.</li>
+            <li><strong>Para elementos únicos:</strong> Si el elemento tiene un ID único, <code>getElementById()</code> es la opción más rápida.</li>
+            <li><strong>Para colecciones dinámicas:</strong> <code>getElementsByClassName()</code> y <code>getElementsByTagName()</code> devuelven colecciones "vivas" (se actualizan automáticamente).</li>
+            <li><strong>Para colecciones estáticas:</strong> <code>querySelectorAll()</code> devuelve una lista estática (snapshot del momento).</li>
+            <li><strong>Siempre verifica si existe:</strong> Usa <code>if (elemento)</code> antes de manipular para evitar errores si el elemento no existe.</li>
+            <li><strong>Performance:</strong> Si tu página tiene miles de elementos, los selectores simples (ID, clase) son más rápidos que los complejos.</li>
+        </ul>
+        
+        <textarea id="code-selector-best" readonly>// ✅ Buena práctica: Verificar antes de usar
+const boton = document.getElementById('miBoton');
+if (boton) {
+    boton.addEventListener('click', () => {
+        console.log('Clic en el botón');
+    });
+} else {
+    console.log('El botón no existe en la página');
+}
+
+// ✅ Buena práctica: Guardar referencias
+const contenedor = document.querySelector('.contenedor');
+const items = contenedor.querySelectorAll('.item');
+
+// ❌ Mala práctica: Buscar múltiples veces
+// document.querySelector('.item').style.color = 'red';
+// document.querySelector('.item').style.fontSize = '20px';
+
+// ✅ Mejor: Buscar una vez y guardar
+const item = document.querySelector('.item');
+item.style.color = 'red';
+item.style.fontSize = '20px';</textarea>
+        <button onclick="runCode('code-selector-best')">Ejecutar</button>
+        <div class="output" id="output-selector-best"></div>
+    </div>
+
+    <hr>
+    <hr>
+
+    <h3>🛠️ PARTE 2: Manipulación del DOM - Crear, Modificar y Eliminar Elementos</h3>
+    <p>Ahora que sabes cómo <strong>seleccionar</strong> elementos, es hora de aprender a <strong>manipularlos</strong>. Esto incluye cambiar contenido, estilos, atributos, crear nuevos elementos y eliminarlos.</p>
+
+    <hr>
+
+    <div class="example">
+        <h4>📝 1. Cambiar el CONTENIDO de un elemento</h4>
+        <p>Hay tres propiedades principales para cambiar el contenido:</p>
+        
+        <h5>a) textContent - Solo texto plano</h5>
+        <p>Cambia el texto dentro del elemento. NO interpreta HTML, todo se muestra como texto.</p>
+        <textarea id="code-manip-1a" readonly>// HTML: <div id="caja1">Texto original</div>
+
+const caja = document.getElementById('caja1');
+
+// Cambiar el texto
+caja.textContent = 'Nuevo texto';
+console.log('Contenido cambiado:', caja.textContent);
+
+// Si pones HTML, se mostrará como texto
+caja.textContent = '<strong>Negrita</strong>';
+// Resultado: Se ve literalmente "<strong>Negrita</strong>"</textarea>
+        <button onclick="runCode('code-manip-1a')">Ejecutar</button>
+        <div class="output" id="output-manip-1a"></div>
+
+        <h5>b) innerHTML - Texto con HTML</h5>
+        <p>Cambia el contenido Y sí interpreta etiquetas HTML.</p>
+        <textarea id="code-manip-1b" readonly>// HTML: <div id="caja2">Contenido original</div>
+
+const caja2 = document.getElementById('caja2');
+
+// Cambiar con HTML
+caja2.innerHTML = '<strong>Texto en negrita</strong>';
+console.log('HTML insertado');
+
+// También puedes construir estructuras complejas
+caja2.innerHTML = \`
+    <h4>Lista de compras:</h4>
+    <ul>
+        <li>Manzanas</li>
+        <li>Plátanos</li>
+        <li>Naranjas</li>
+    </ul>
+\`;
+console.log('Estructura HTML completa insertada');</textarea>
+        <button onclick="runCode('code-manip-1b')">Ejecutar</button>
+        <div class="output" id="output-manip-1b"></div>
+
+        <h5>c) value - Para inputs y formularios</h5>
+        <p>Para leer o cambiar el valor de inputs, textareas y selects.</p>
+        <textarea id="code-manip-1c" readonly>// HTML: <input type="text" id="miInput" value="inicial">
+
+const input = document.getElementById('miInput');
+
+// Leer el valor actual
+console.log('Valor actual:', input.value);
+
+// Cambiar el valor
+input.value = 'Nuevo valor programáticamente';
+console.log('Valor cambiado:', input.value);
+
+// Limpiar un input
+input.value = '';
+console.log('Input limpiado');</textarea>
+        <button onclick="runCode('code-manip-1c')">Ejecutar</button>
+        <div class="output" id="output-manip-1c"></div>
+
+        <p><strong>⚠️ Diferencia importante:</strong></p>
+        <ul>
+            <li><code>textContent</code>: Más rápido y seguro. Usa cuando solo necesites texto.</li>
+            <li><code>innerHTML</code>: Más lento pero flexible. CUIDADO con contenido de usuarios (riesgo XSS).</li>
+            <li><code>value</code>: Solo para elementos de formulario.</li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🎨 2. Cambiar ESTILOS CSS</h4>
+        <p>Puedes modificar estilos CSS directamente desde JavaScript.</p>
+        
+        <h5>a) Propiedad style - Estilos inline individuales</h5>
+        <textarea id="code-manip-2a" readonly>// HTML: <div id="caja3">Caja de ejemplo</div>
+
+const caja3 = document.getElementById('caja3');
+
+// Cambiar estilos individuales
+caja3.style.color = 'blue';
+caja3.style.backgroundColor = 'yellow';
+caja3.style.fontSize = '24px';
+caja3.style.padding = '20px';
+caja3.style.border = '2px solid red';
+caja3.style.borderRadius = '10px';
+
+// Nota: Las propiedades CSS con guión se convierten a camelCase
+// background-color → backgroundColor
+// font-size → fontSize
+// border-radius → borderRadius
+
+console.log('Estilos aplicados');</textarea>
+        <button onclick="runCode('code-manip-2a')">Ejecutar</button>
+        <div class="output" id="output-manip-2a"></div>
+
+        <h5>b) classList - Trabajar con clases CSS</h5>
+        <p>Mejor práctica: Define estilos en CSS y añade/quita clases desde JS.</p>
+        <textarea id="code-manip-2b" readonly>// HTML: <div id="caja4" class="activo">Caja con clase</div>
+// CSS imaginario: .destacado { background: gold; font-weight: bold; }
+
+const caja4 = document.getElementById('caja4');
+
+// Añadir una clase
+caja4.classList.add('destacado');
+console.log('Clase añadida:', caja4.className);
+
+// Quitar una clase
+caja4.classList.remove('activo');
+console.log('Clase quitada:', caja4.className);
+
+// Toggle (si está la quita, si no está la añade)
+caja4.classList.toggle('destacado');
+console.log('Toggle 1:', caja4.className);
+caja4.classList.toggle('destacado');
+console.log('Toggle 2:', caja4.className);
+
+// Verificar si tiene una clase
+if (caja4.classList.contains('destacado')) {
+    console.log('Tiene la clase destacado');
+} else {
+    console.log('NO tiene la clase destacado');
+}
+
+// Reemplazar una clase por otra
+caja4.classList.replace('activo', 'inactivo');</textarea>
+        <button onclick="runCode('code-manip-2b')">Ejecutar</button>
+        <div class="output" id="output-manip-2b"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🏷️ 3. Trabajar con ATRIBUTOS</h4>
+        <p>Los atributos son propiedades HTML como src, href, alt, data-*, etc.</p>
+        
+        <textarea id="code-manip-3" readonly>// HTML: <img id="foto" src="imagen1.jpg" alt="Foto">
+
+const foto = document.getElementById('foto');
+
+// Leer un atributo
+console.log('Atributo src:', foto.getAttribute('src'));
+console.log('Atributo alt:', foto.getAttribute('alt'));
+
+// Cambiar un atributo
+foto.setAttribute('src', 'imagen2.jpg');
+foto.setAttribute('alt', 'Nueva foto');
+console.log('Atributos cambiados');
+
+// Verificar si tiene un atributo
+if (foto.hasAttribute('src')) {
+    console.log('La imagen tiene atributo src');
+}
+
+// Eliminar un atributo
+foto.removeAttribute('alt');
+console.log('Atributo alt eliminado');
+
+// Atributos data-* (dataset)
+// HTML: <div id="usuario" data-id="123" data-nombre="Juan"></div>
+const usuario = document.getElementById('usuario');
+console.log('Data ID:', usuario.dataset.id);
+console.log('Data Nombre:', usuario.dataset.nombre);
+
+// Cambiar atributos data-*
+usuario.dataset.id = '456';
+usuario.dataset.rol = 'admin';
+console.log('Dataset actualizado');</textarea>
+        <button onclick="runCode('code-manip-3')">Ejecutar</button>
+        <div class="output" id="output-manip-3"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>➕ 4. CREAR nuevos elementos</h4>
+        <p>Puedes crear elementos HTML desde cero con JavaScript.</p>
+        
+        <h5>Método completo paso a paso:</h5>
+        <textarea id="code-manip-4" readonly>// Paso 1: Crear el elemento
+const nuevoDiv = document.createElement('div');
+
+// Paso 2: Configurar el contenido
+nuevoDiv.textContent = 'Soy un div nuevo';
+
+// Paso 3: Añadir estilos o clases
+nuevoDiv.style.backgroundColor = 'lightblue';
+nuevoDiv.style.padding = '10px';
+nuevoDiv.style.margin = '10px';
+nuevoDiv.classList.add('caja-nueva');
+
+// Paso 4: Añadirlo al DOM
+document.body.appendChild(nuevoDiv);
+console.log('Nuevo div añadido al body');
+
+// Ejemplo más completo: Crear una tarjeta
+const tarjeta = document.createElement('article');
+tarjeta.innerHTML = \`
+    <h3>Producto</h3>
+    <p>Descripción del producto</p>
+    <button>Comprar</button>
+\`;
+tarjeta.style.border = '1px solid gray';
+tarjeta.style.padding = '15px';
+tarjeta.style.margin = '10px';
+tarjeta.style.borderRadius = '8px';
+
+// Añadir a un contenedor específico
+const contenedor = document.querySelector('.contenedor');
+if (contenedor) {
+    contenedor.appendChild(tarjeta);
+    console.log('Tarjeta añadida al contenedor');
+}</textarea>
+        <button onclick="runCode('code-manip-4')">Ejecutar</button>
+        <div class="output" id="output-manip-4"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>📍 5. Métodos para INSERTAR elementos en diferentes posiciones</h4>
+        
+        <h5>a) appendChild() - Al final (ya lo vimos)</h5>
+        <textarea id="code-manip-5a" readonly>const lista = document.querySelector('ul');
+const nuevoItem = document.createElement('li');
+nuevoItem.textContent = 'Último elemento';
+
+lista.appendChild(nuevoItem);
+console.log('Elemento añadido al final');</textarea>
+        <button onclick="runCode('code-manip-5a')">Ejecutar</button>
+        <div class="output" id="output-manip-5a"></div>
+
+        <h5>b) insertBefore() - Antes de un elemento específico</h5>
+        <textarea id="code-manip-5b" readonly>// HTML: <ul><li id="item2">Item 2</li></ul>
+
+const lista2 = document.querySelector('ul');
+const item2 = document.getElementById('item2');
+const nuevoItem2 = document.createElement('li');
+nuevoItem2.textContent = 'Item insertado antes';
+
+// Insertar ANTES del item2
+lista2.insertBefore(nuevoItem2, item2);
+console.log('Elemento insertado antes del item2');</textarea>
+        <button onclick="runCode('code-manip-5b')">Ejecutar</button>
+        <div class="output" id="output-manip-5b"></div>
+
+        <h5>c) insertAdjacentHTML() - Insertar HTML en posiciones específicas</h5>
+        <textarea id="code-manip-5c" readonly>// HTML: <div id="contenedor">Contenido actual</div>
+
+const cont = document.getElementById('contenedor');
+
+// beforebegin: ANTES del elemento
+cont.insertAdjacentHTML('beforebegin', '<p>Antes del contenedor</p>');
+
+// afterbegin: DENTRO, al principio
+cont.insertAdjacentHTML('afterbegin', '<p>Inicio interno</p>');
+
+// beforeend: DENTRO, al final
+cont.insertAdjacentHTML('beforeend', '<p>Final interno</p>');
+
+// afterend: DESPUÉS del elemento
+cont.insertAdjacentHTML('afterend', '<p>Después del contenedor</p>');
+
+console.log('HTML insertado en 4 posiciones');</textarea>
+        <button onclick="runCode('code-manip-5c')">Ejecutar</button>
+        <div class="output" id="output-manip-5c"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🗑️ 6. ELIMINAR elementos</h4>
+        
+        <h5>a) remove() - Eliminar el elemento mismo (moderno)</h5>
+        <textarea id="code-manip-6a" readonly>// HTML: <div id="eliminar1">Elimíname</div>
+
+const elemento = document.getElementById('eliminar1');
+
+// Método moderno y simple
+elemento.remove();
+console.log('Elemento eliminado con remove()');</textarea>
+        <button onclick="runCode('code-manip-6a')">Ejecutar</button>
+        <div class="output" id="output-manip-6a"></div>
+
+        <h5>b) removeChild() - Eliminar un hijo específico</h5>
+        <textarea id="code-manip-6b" readonly>// HTML: <ul id="lista"><li id="item-a">A</li></ul>
+
+const lista3 = document.getElementById('lista');
+const itemA = document.getElementById('item-a');
+
+// Método clásico: el padre elimina al hijo
+lista3.removeChild(itemA);
+console.log('Elemento eliminado con removeChild()');</textarea>
+        <button onclick="runCode('code-manip-6b')">Ejecutar</button>
+        <div class="output" id="output-manip-6b"></div>
+
+        <h5>c) innerHTML = '' - Vaciar todo el contenido</h5>
+        <textarea id="code-manip-6c" readonly>// HTML: <div id="contenedor2"><p>A</p><p>B</p></div>
+
+const cont2 = document.getElementById('contenedor2');
+
+// Vaciar completamente el contenedor
+cont2.innerHTML = '';
+console.log('Contenedor vaciado completamente');</textarea>
+        <button onclick="runCode('code-manip-6c')">Ejecutar</button>
+        <div class="output" id="output-manip-6c"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>🔄 7. CLONAR elementos</h4>
+        <p>Puedes duplicar un elemento existente con todas sus propiedades.</p>
+        
+        <textarea id="code-manip-7" readonly>// HTML: <div id="original">Elemento original</div>
+
+const original = document.getElementById('original');
+
+// Clonar SIN hijos internos
+const clon1 = original.cloneNode(false);
+console.log('Clon superficial creado');
+
+// Clonar CON todos los hijos (deep clone)
+const clon2 = original.cloneNode(true);
+clon2.textContent = 'Soy un clon profundo';
+console.log('Clon profundo creado');
+
+// Añadir los clones al DOM
+document.body.appendChild(clon1);
+document.body.appendChild(clon2);
+console.log('Clones añadidos al DOM');</textarea>
+        <button onclick="runCode('code-manip-7')">Ejecutar</button>
+        <div class="output" id="output-manip-7"></div>
+    </div>
+
+    <hr>
+
+    <div class="example">
+        <h4>📦 EJEMPLO PRÁCTICO COMPLETO: Sistema de tarjetas</h4>
+        <p>Combina todo lo aprendido para crear un sistema dinámico.</p>
+        
+        <textarea id="code-manip-practica" readonly>// Crear un contenedor
+const contenedorTarjetas = document.createElement('div');
+contenedorTarjetas.id = 'galeria-tarjetas';
+contenedorTarjetas.style.display = 'flex';
+contenedorTarjetas.style.gap = '10px';
+contenedorTarjetas.style.padding = '20px';
+contenedorTarjetas.style.flexWrap = 'wrap';
+
+// Datos de ejemplo
+const productos = [
+    { id: 1, nombre: 'Laptop', precio: 1200 },
+    { id: 2, nombre: 'Mouse', precio: 25 },
+    { id: 3, nombre: 'Teclado', precio: 80 }
+];
+
+// Crear una tarjeta por cada producto
+productos.forEach(producto => {
+    // Crear elementos
+    const tarjeta = document.createElement('div');
+    const titulo = document.createElement('h4');
+    const precio = document.createElement('p');
+    const boton = document.createElement('button');
+    
+    // Configurar contenido
+    titulo.textContent = producto.nombre;
+    precio.textContent = '$' + producto.precio;
+    boton.textContent = 'Añadir al carrito';
+    
+    // Estilos
+    tarjeta.style.border = '1px solid #ddd';
+    tarjeta.style.padding = '15px';
+    tarjeta.style.borderRadius = '8px';
+    tarjeta.style.width = '150px';
+    tarjeta.style.textAlign = 'center';
+    
+    // Atributos data
+    tarjeta.dataset.productId = producto.id;
+    
+    // Evento al botón
+    boton.addEventListener('click', () => {
+        console.log('Añadido:', producto.nombre);
+        boton.textContent = '✓ Añadido';
+        boton.style.backgroundColor = 'green';
+        boton.style.color = 'white';
+    });
+    
+    // Ensamblar la tarjeta
+    tarjeta.appendChild(titulo);
+    tarjeta.appendChild(precio);
+    tarjeta.appendChild(boton);
+    
+    // Añadir al contenedor
+    contenedorTarjetas.appendChild(tarjeta);
+});
+
+// Añadir el contenedor completo al body
+document.body.appendChild(contenedorTarjetas);
+console.log('Galería de ' + productos.length + ' tarjetas creada');</textarea>
+        <button onclick="runCode('code-manip-practica')">Ejecutar</button>
+        <div class="output" id="output-manip-practica"></div>
+    </div>
+
+    <hr>
+    <hr>
+
+    <h3>⚡ PARTE 3: Eventos del DOM - Hacer tu página interactiva</h3>
+    
+    <div class="example">
+        <h4>📢 ¿Qué son los EVENTOS?</h4>
+        <p>Los <strong>eventos</strong> son acciones o sucesos que ocurren en el navegador. Pueden ser provocados por el usuario (como hacer clic, mover el ratón, escribir) o por el propio navegador (como cuando termina de cargar la página).</p>
+        
+        <p>JavaScript puede "escuchar" estos eventos y ejecutar código cuando ocurren. Esto es lo que hace a las páginas web <strong>interactivas</strong>.</p>
+
+        <h5>🎯 addEventListener() - La forma profesional</h5>
+        <p>Es el método principal para escuchar eventos. Tiene esta sintaxis:</p>
+        <textarea readonly>elemento.addEventListener(tipoDeEvento, función);
+
+// Ejemplo:
+const boton = document.getElementById('miBoton');
+boton.addEventListener('click', function() {
+    console.log('¡Botón clickeado!');
+});</textarea>
+
+        <h5>📋 Tipos de Eventos más comunes</h5>
+        
+        <h6>1. Eventos de RATÓN (Mouse Events)</h6>
+        <ul>
+            <li><code>click</code> - Cuando haces clic en un elemento</li>
+            <li><code>dblclick</code> - Doble clic en un elemento</li>
+            <li><code>mouseenter</code> - Cuando el ratón entra en el área del elemento</li>
+            <li><code>mouseleave</code> - Cuando el ratón sale del área del elemento</li>
+            <li><code>mousemove</code> - Mientras el ratón se mueve sobre el elemento</li>
+            <li><code>mousedown</code> - Cuando presionas el botón del ratón</li>
+            <li><code>mouseup</code> - Cuando sueltas el botón del ratón</li>
+            <li><code>contextmenu</code> - Cuando haces clic derecho</li>
+        </ul>
+
+        <textarea readonly>// Ejemplo de eventos de ratón:
+const caja = document.getElementById('miCaja');
+
+caja.addEventListener('mouseenter', function() {
+    caja.style.backgroundColor = 'yellow';
+});
+
+caja.addEventListener('mouseleave', function() {
+    caja.style.backgroundColor = 'white';
+});
+
+caja.addEventListener('click', function() {
+    console.log('Caja clickeada');
+});</textarea>
+
+        <h6>2. Eventos de TECLADO (Keyboard Events)</h6>
+        <ul>
+            <li><code>keydown</code> - Cuando presionas una tecla (se repite si la mantienes)</li>
+            <li><code>keyup</code> - Cuando sueltas una tecla</li>
+            <li><code>keypress</code> - Cuando una tecla produce un carácter (obsoleto, usa keydown)</li>
+        </ul>
+
+        <textarea readonly>// Ejemplo de eventos de teclado:
+document.addEventListener('keydown', function(evento) {
+    console.log('Tecla presionada:', evento.key);
+    console.log('Código:', evento.code);
+    
+    if (evento.key === 'Enter') {
+        console.log('¡Enter presionado!');
+    }
+    
+    if (evento.key === 'Escape') {
+        console.log('¡Escape presionado!');
+    }
+});</textarea>
+
+        <h6>3. Eventos de FORMULARIO (Form Events)</h6>
+        <ul>
+            <li><code>submit</code> - Cuando se envía un formulario</li>
+            <li><code>input</code> - Cada vez que cambia el valor de un input (tiempo real)</li>
+            <li><code>change</code> - Cuando un input pierde el foco después de cambiar</li>
+            <li><code>focus</code> - Cuando un elemento recibe el foco</li>
+            <li><code>blur</code> - Cuando un elemento pierde el foco</li>
+            <li><code>reset</code> - Cuando se resetea un formulario</li>
+        </ul>
+
+        <textarea readonly>// Ejemplo de eventos de formulario:
+const formulario = document.getElementById('miForm');
+const input = document.getElementById('miInput');
+
+formulario.addEventListener('submit', function(evento) {
+    evento.preventDefault(); // ¡IMPORTANTE! Evita recargar la página
+    console.log('Formulario enviado');
+});
+
+input.addEventListener('input', function() {
+    console.log('Valor actual:', input.value);
+});
+
+input.addEventListener('focus', function() {
+    input.style.borderColor = 'blue';
+});
+
+input.addEventListener('blur', function() {
+    input.style.borderColor = 'gray';
+});</textarea>
+
+        <h6>4. Eventos de VENTANA y DOCUMENTO (Window/Document Events)</h6>
+        <ul>
+            <li><code>load</code> - Cuando la página termina de cargar completamente</li>
+            <li><code>DOMContentLoaded</code> - Cuando el HTML está cargado (antes que las imágenes)</li>
+            <li><code>resize</code> - Cuando cambia el tamaño de la ventana</li>
+            <li><code>scroll</code> - Cuando se hace scroll</li>
+            <li><code>beforeunload</code> - Antes de cerrar/salir de la página</li>
+        </ul>
+
+        <textarea readonly>// Ejemplo de eventos de ventana:
+window.addEventListener('load', function() {
+    console.log('Página completamente cargada');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM listo (antes de imágenes)');
+});
+
+window.addEventListener('resize', function() {
+    console.log('Ancho:', window.innerWidth);
+});
+
+window.addEventListener('scroll', function() {
+    console.log('Scroll Y:', window.scrollY);
+});</textarea>
+
+        <h6>5. Eventos de ARRASTRAR (Drag Events)</h6>
+        <ul>
+            <li><code>dragstart</code> - Cuando empiezas a arrastrar</li>
+            <li><code>drag</code> - Mientras arrastras</li>
+            <li><code>dragend</code> - Cuando terminas de arrastrar</li>
+            <li><code>dragenter</code> - Cuando entras en una zona de soltar</li>
+            <li><code>dragover</code> - Mientras estás sobre una zona de soltar</li>
+            <li><code>drop</code> - Cuando sueltas en una zona</li>
+        </ul>
+
+        <h6>6. Eventos de PORTAPAPELES (Clipboard Events)</h6>
+        <ul>
+            <li><code>copy</code> - Cuando copias contenido</li>
+            <li><code>cut</code> - Cuando cortas contenido</li>
+            <li><code>paste</code> - Cuando pegas contenido</li>
+        </ul>
+
+        <h6>7. Eventos de MEDIOS (Media Events)</h6>
+        <ul>
+            <li><code>play</code> - Cuando se reproduce audio/video</li>
+            <li><code>pause</code> - Cuando se pausa</li>
+            <li><code>ended</code> - Cuando termina la reproducción</li>
+            <li><code>volumechange</code> - Cuando cambia el volumen</li>
+        </ul>
+
+        <h5>🎁 El objeto EVENT (evento)</h5>
+        <p>Cuando un evento ocurre, JavaScript pasa automáticamente un objeto <code>event</code> a la función. Este objeto contiene información útil sobre el evento:</p>
+
+        <textarea readonly>elemento.addEventListener('click', function(evento) {
+    // Propiedades comunes del objeto event:
+    
+    console.log(evento.type);        // Tipo de evento: 'click'
+    console.log(evento.target);      // El elemento que disparó el evento
+    console.log(evento.currentTarget); // El elemento que tiene el listener
+    console.log(evento.timeStamp);   // Cuándo ocurrió (milisegundos)
+    
+    // Para eventos de ratón:
+    console.log(evento.clientX);     // Posición X del cursor
+    console.log(evento.clientY);     // Posición Y del cursor
+    console.log(evento.button);      // Qué botón del ratón (0=izq, 1=medio, 2=der)
+    
+    // Para eventos de teclado:
+    console.log(evento.key);         // La tecla presionada: 'a', 'Enter', etc.
+    console.log(evento.code);        // Código físico: 'KeyA', 'Enter', etc.
+    console.log(evento.ctrlKey);     // true si Ctrl está presionado
+    console.log(evento.shiftKey);    // true si Shift está presionado
+    console.log(evento.altKey);      // true si Alt está presionado
+});</textarea>
+
+        <h5>🚫 Métodos importantes del evento</h5>
+        
+        <h6>1. preventDefault() - Prevenir comportamiento por defecto</h6>
+        <p>Algunos elementos tienen comportamientos por defecto (enlaces navegan, formularios recargan la página). Puedes prevenirlos:</p>
+        
+        <textarea readonly>// Ejemplo: Prevenir que un formulario recargue la página
+const form = document.getElementById('miForm');
+form.addEventListener('submit', function(evento) {
+    evento.preventDefault(); // ¡Detiene el comportamiento por defecto!
+    console.log('Formulario procesado sin recargar');
+});
+
+// Ejemplo: Prevenir que un enlace navegue
+const enlace = document.getElementById('miEnlace');
+enlace.addEventListener('click', function(evento) {
+    evento.preventDefault();
+    console.log('Enlace clickeado pero no navegó');
+});
+
+// Ejemplo: Prevenir el menú contextual (clic derecho)
+document.addEventListener('contextmenu', function(evento) {
+    evento.preventDefault();
+    console.log('Clic derecho bloqueado');
+});</textarea>
+
+        <h6>2. stopPropagation() - Detener la propagación (bubbling)</h6>
+        <p>Los eventos "burbujean" hacia arriba en el árbol del DOM. A veces quieres detener esta propagación:</p>
+        
+        <textarea readonly>// Ejemplo: Event Bubbling
+// HTML: <div id="padre"><button id="hijo">Clic aquí</button></div>
+
+const padre = document.getElementById('padre');
+const hijo = document.getElementById('hijo');
+
+padre.addEventListener('click', function() {
+    console.log('Click en PADRE');
+});
+
+hijo.addEventListener('click', function(evento) {
+    console.log('Click en HIJO');
+    evento.stopPropagation(); // Detiene el bubbling, no llegará al padre
+});
+
+// Sin stopPropagation, al hacer clic en hijo verías:
+// "Click en HIJO"
+// "Click en PADRE" (por el bubbling)
+
+// Con stopPropagation, solo verás:
+// "Click en HIJO"</textarea>
+
+        <h6>3. stopImmediatePropagation() - Detener TODOS los listeners</h6>
+        <p>Similar a stopPropagation, pero también detiene otros listeners en el MISMO elemento:</p>
+        
+        <textarea readonly>const boton = document.getElementById('miBoton');
+
+boton.addEventListener('click', function(evento) {
+    console.log('Listener 1');
+    evento.stopImmediatePropagation(); // Detiene TODO
+});
+
+boton.addEventListener('click', function() {
+    console.log('Listener 2'); // Esto NO se ejecutará
+});</textarea>
+
+        <h5>🎯 Event Delegation (Delegación de Eventos)</h5>
+        <p>En lugar de añadir listeners a muchos elementos, añades uno solo al padre y usas <code>event.target</code> para saber qué elemento fue clickeado. ¡Muy eficiente!</p>
+        
+        <textarea readonly>// ❌ Forma INEFICIENTE (muchos listeners):
+const botones = document.querySelectorAll('.boton');
+botones.forEach(boton => {
+    boton.addEventListener('click', function() {
+        console.log('Botón clickeado');
+    });
+});
+
+// ✅ Forma EFICIENTE (Event Delegation):
+const contenedor = document.getElementById('contenedor');
+contenedor.addEventListener('click', function(evento) {
+    // Verificar si el elemento clickeado es un botón
+    if (evento.target.classList.contains('boton')) {
+        console.log('Botón clickeado:', evento.target.textContent);
+    }
+});
+
+// Ejemplo práctico: Lista de tareas donde puedes eliminar items
+const lista = document.getElementById('lista-tareas');
+
+lista.addEventListener('click', function(evento) {
+    // Si clickeaste un botón de eliminar
+    if (evento.target.classList.contains('btn-eliminar')) {
+        const tarea = evento.target.closest('li');
+        tarea.remove();
+        console.log('Tarea eliminada');
+    }
+});</textarea>
+
+        <h5>📊 Comparación: Event Bubbling vs Capturing</h5>
+        <p>Los eventos tienen dos fases de propagación:</p>
+        <ul>
+            <li><strong>Capturing (Captura)</strong>: El evento viaja HACIA ABAJO desde window hasta el elemento objetivo</li>
+            <li><strong>Bubbling (Burbujeo)</strong>: El evento viaja HACIA ARRIBA desde el elemento objetivo hasta window</li>
+        </ul>
+        
+        <p>Por defecto, los listeners se ejecutan en la fase de <strong>bubbling</strong>. Puedes cambiar esto con el tercer parámetro:</p>
+        
+        <textarea readonly>// Listening en fase de BUBBLING (por defecto)
+elemento.addEventListener('click', funcion);
+elemento.addEventListener('click', funcion, false);
+
+// Listening en fase de CAPTURING
+elemento.addEventListener('click', funcion, true);
+
+// Ejemplo completo:
+// HTML: <div id="abuelo"><div id="padre"><div id="hijo">CLIC</div></div></div>
+
+const abuelo = document.getElementById('abuelo');
+const padre = document.getElementById('padre');
+const hijo = document.getElementById('hijo');
+
+// Todos en capturing (true)
+abuelo.addEventListener('click', () => console.log('Abuelo'), true);
+padre.addEventListener('click', () => console.log('Padre'), true);
+hijo.addEventListener('click', () => console.log('Hijo'), true);
+
+// Al hacer clic en "hijo" verás:
+// "Abuelo" (capturing: de arriba hacia abajo)
+// "Padre"
+// "Hijo"
+
+// Si fueran bubbling (false o sin parámetro):
+// "Hijo"
+// "Padre"
+// "Abuelo" (bubbling: de abajo hacia arriba)</textarea>
+
+        <h5>🔄 Remover Event Listeners</h5>
+        <p>Para remover un listener, la función debe estar guardada en una variable (no puede ser anónima):</p>
+        
+        <textarea readonly>// ❌ NO puedes remover funciones anónimas:
+boton.addEventListener('click', function() {
+    console.log('Click');
+});
+// No hay forma de remover esto
+
+// ✅ Forma correcta (función con nombre):
+function manejarClick() {
+    console.log('Click');
+}
+
+boton.addEventListener('click', manejarClick);
+boton.removeEventListener('click', manejarClick); // Ahora sí puedes removerlo
+
+// Ejemplo práctico: Listener que se ejecuta solo UNA vez
+function alertarUnaVez() {
+    console.log('¡Solo me verás una vez!');
+    boton.removeEventListener('click', alertarUnaVez);
+}
+
+boton.addEventListener('click', alertarUnaVez);
+
+// Forma moderna (más fácil):
+boton.addEventListener('click', function() {
+    console.log('¡Solo una vez!');
+}, { once: true }); // El { once: true } lo hace automáticamente</textarea>
+
+        <h5>⚙️ Opciones avanzadas de addEventListener</h5>
+        <p>El tercer parámetro puede ser un objeto con opciones:</p>
+        
+        <textarea readonly>elemento.addEventListener('click', funcion, {
+    capture: false,   // false = bubbling (default), true = capturing
+    once: true,       // Se ejecuta solo una vez y se remueve automáticamente
+    passive: true     // Optimización: indica que nunca llamarás preventDefault()
+});
+
+// Ejemplo: Listener que se ejecuta una sola vez
+boton.addEventListener('click', function() {
+    console.log('Primera vez');
+}, { once: true });
+
+// Ejemplo: Scroll optimizado (passive)
+window.addEventListener('scroll', function() {
+    console.log('Scrolling...');
+}, { passive: true }); // Mejora el rendimiento</textarea>
+
+        <h5>🎨 Ejemplo completo: Sistema de pestañas (Tabs)</h5>
+        <textarea readonly>// HTML imaginario:
+// <div class="tabs">
+//   <button class="tab-btn active" data-tab="tab1">Pestaña 1</button>
+//   <button class="tab-btn" data-tab="tab2">Pestaña 2</button>
+//   <button class="tab-btn" data-tab="tab3">Pestaña 3</button>
+// </div>
+// <div class="tab-content active" id="tab1">Contenido 1</div>
+// <div class="tab-content" id="tab2">Contenido 2</div>
+// <div class="tab-content" id="tab3">Contenido 3</div>
+
+const tabsContainer = document.querySelector('.tabs');
+
+// Event delegation: un solo listener para todos los botones
+tabsContainer.addEventListener('click', function(evento) {
+    // Verificar que se clickeó un botón de pestaña
+    if (!evento.target.classList.contains('tab-btn')) return;
+    
+    // 1. Remover clase 'active' de todos los botones
+    const todosBotones = document.querySelectorAll('.tab-btn');
+    todosBotones.forEach(btn => btn.classList.remove('active'));
+    
+    // 2. Añadir 'active' al botón clickeado
+    evento.target.classList.add('active');
+    
+    // 3. Obtener el id del contenido a mostrar
+    const tabId = evento.target.dataset.tab;
+    
+    // 4. Ocultar todo el contenido
+    const todosContenidos = document.querySelectorAll('.tab-content');
+    todosContenidos.forEach(content => content.classList.remove('active'));
+    
+    // 5. Mostrar el contenido correspondiente
+    const contenidoActivo = document.getElementById(tabId);
+    contenidoActivo.classList.add('active');
+    
+    console.log('Cambiado a pestaña:', tabId);
+});</textarea>
+
+        <h5>⚡ Mejores Prácticas con Eventos</h5>
+        <ul>
+            <li>✅ Usa <code>addEventListener()</code> en lugar de atributos HTML como <code>onclick</code></li>
+            <li>✅ Usa Event Delegation cuando tengas muchos elementos similares</li>
+            <li>✅ Siempre usa <code>preventDefault()</code> en formularios si los manejas con JS</li>
+            <li>✅ Guarda funciones en variables si necesitas removerlas después</li>
+            <li>✅ Usa <code>{ once: true }</code> para listeners que solo se ejecutan una vez</li>
+            <li>✅ Usa <code>{ passive: true }</code> en eventos de scroll/touch para mejor rendimiento</li>
+            <li>❌ Evita funciones anónimas si necesitas remover el listener</li>
+            <li>❌ No olvides <code>preventDefault()</code> en formularios o navegarás/recargarás</li>
+            <li>❌ No añadas demasiados listeners; usa event delegation</li>
+        </ul>
+
+        <h5>🔍 Debugging de Eventos</h5>
+        <textarea readonly>// Ver TODOS los datos de un evento:
+elemento.addEventListener('click', function(evento) {
+    console.log('Evento completo:', evento);
+    console.dir(evento); // Muestra todas las propiedades
+});
+
+// Ver el "path" del evento (por dónde pasó):
+elemento.addEventListener('click', function(evento) {
+    console.log('Camino del evento:', evento.composedPath());
+    // Muestra: [elemento, padre, abuelo, body, html, document, window]
+});
+
+// Usar las DevTools:
+// 1. Inspecciona un elemento
+// 2. Ve a la pestaña "Event Listeners"
+// 3. Verás todos los listeners en ese elemento</textarea>
+    </div>
+
+    <hr>
+    <h3>💡 EJEMPLOS PRÁCTICOS DE EVENTOS</h3>
+    <p>Ahora que conoces la teoría, aquí hay ejemplos interactivos para practicar:</p>
+
+    <h3>1. El Árbol Mágico</h3>
     <p>Aquí tenemos un árbol con una fruta. Usaremos JavaScript para seleccionarla por su ID ("#fruta-magica") y cambiar su color.</p>
     
     <div class="example">
