@@ -316,8 +316,8 @@ window.runCode = function() {
 };
 
 // Función para limpiar un editor específico
-window.clearEditor = function(editorType) {
-    const editor = document.getElementById(`${editorType}-editor`);
+window.clearEditor = function(editorId) {
+    const editor = document.getElementById(editorId);
     if (editor) {
         editor.value = '';
         runCode();
