@@ -32,8 +32,10 @@
                     <div class="editor-container">
                         <div class="editor-header">
                             <span class="editor-title">📄 HTML</span>
-                            <button class="clear-btn" onclick="clearEditor('html-editor')">Limpiar</button>
+                            <button class="clear-btn" onclick="clearPlaygroundEditor('html-editor')">Limpiar</button>
                         </div>
+                        <!-- Monaco container (autocompletado); el textarea queda como fallback/estado -->
+                        <div id="html-monaco" class="monaco-container"></div>
                         <textarea id="html-editor" placeholder="Escribe tu HTML aquí..."><!-- Ejemplo: -->
 <h1>¡Hola Mundo!</h1>
 <p>Edita este código</p>
@@ -43,8 +45,9 @@
                     <div class="editor-container">
                         <div class="editor-header">
                             <span class="editor-title">🎨 CSS</span>
-                            <button class="clear-btn" onclick="clearEditor('css-editor')">Limpiar</button>
+                            <button class="clear-btn" onclick="clearPlaygroundEditor('css-editor')">Limpiar</button>
                         </div>
+                        <div id="css-monaco" class="monaco-container"></div>
                         <textarea id="css-editor" placeholder="Escribe tu CSS aquí...">/* Ejemplo: */
 body {
     font-family: Arial;
@@ -68,8 +71,9 @@ button {
                     <div class="editor-container">
                         <div class="editor-header">
                             <span class="editor-title">⚡ JavaScript</span>
-                            <button class="clear-btn" onclick="clearEditor('js-editor')">Limpiar</button>
+                            <button class="clear-btn" onclick="clearPlaygroundEditor('js-editor')">Limpiar</button>
                         </div>
+                        <div id="js-monaco" class="monaco-container"></div>
                         <textarea id="js-editor" placeholder="Escribe tu JavaScript aquí...">// Ejemplo:
 const boton = document.getElementById('miBoton');
 
@@ -83,7 +87,7 @@ boton.addEventListener('click', function() {
                 <div class="preview-container">
                     <div class="preview-header">
                         <span class="preview-title">👁️ Vista Previa</span>
-                        <button class="refresh-btn" onclick="runCode()">▶️ Ejecutar</button>
+                        <button class="refresh-btn" onclick="runPlayground()">▶️ Ejecutar</button>
                     </div>
                     <iframe id="preview"></iframe>
                 </div>
@@ -95,6 +99,22 @@ boton.addEventListener('click', function() {
         <p>&copy; 2026 - Plataforma de Aprendizaje de JavaScript</p>
     </footer>
 
-    <script src="js/main.js"></script>
+        <script src="js/main.js"></script>
+        <!-- Monaco Editor (IntelliSense/autorrelleno) -->
+        <script>
+            // Configuración del loader AMD de Monaco
+            window.require = { paths: { 'vs': 'https://unpkg.com/monaco-editor@0.44.0/min/vs' } };
+        </script>
+        <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+        <script>
+            // Cargar Monaco y luego inicializar los editores si existe el playground
+            if (document.getElementById('playground')) {
+                require(['vs/editor/editor.main'], function () {
+                    if (window.initMonacoEditors) {
+                        window.initMonacoEditors();
+                    }
+                });
+            }
+        </script>
 </body>
 </html>

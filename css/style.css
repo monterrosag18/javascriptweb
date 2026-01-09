@@ -7,6 +7,14 @@
     --content-bg: #ffffff;
     --text-color: #212529;
     --nav-bg: #161b22;
+#playground .monaco-container {
+    display: none; /* visible tras inicializar monaco */
+    width: 100%;
+    height: 280px;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    overflow: hidden;
+}
     --nav-text: #c9d1d9;
     --nav-hover: #21262d;
     --border-color: #30363d;

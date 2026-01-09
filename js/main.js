@@ -274,11 +274,29 @@ window.runCode = function(textareaId) {
 // PLAYGROUND - EDITOR EN VIVO
 // ========================================
 
-// Función para ejecutar el código del playground
-window.runCode = function() {
-    const htmlCode = document.getElementById('html-editor')?.value || '';
-    const cssCode = document.getElementById('css-editor')?.value || '';
-    const jsCode = document.getElementById('js-editor')?.value || '';
+// Estado y helpers para integrar Monaco en el Playground
+window.__monacoEditors = { html: null, css: null, js: null };
+
+function getEditorValueById(id, fallback = '') {
+    if (id === 'html-editor' && window.__monacoEditors.html) return window.__monacoEditors.html.getValue();
+    if (id === 'css-editor' && window.__monacoEditors.css) return window.__monacoEditors.css.getValue();
+    if (id === 'js-editor' && window.__monacoEditors.js) return window.__monacoEditors.js.getValue();
+    return document.getElementById(id)?.value || fallback;
+}
+
+function setEditorValueById(id, value) {
+    if (id === 'html-editor' && window.__monacoEditors.html) return window.__monacoEditors.html.setValue(value);
+    if (id === 'css-editor' && window.__monacoEditors.css) return window.__monacoEditors.css.setValue(value);
+    if (id === 'js-editor' && window.__monacoEditors.js) return window.__monacoEditors.js.setValue(value);
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+}
+
+// Función para ejecutar el código del playground (separada del runCode de ejemplos)
+window.runPlayground = function() {
+    const htmlCode = getEditorValueById('html-editor', '');
+    const cssCode = getEditorValueById('css-editor', '');
+    const jsCode = getEditorValueById('js-editor', '');
     
     const preview = document.getElementById('preview');
     if (!preview) return;
@@ -315,37 +333,104 @@ window.runCode = function() {
     previewDoc.close();
 };
 
-// Función para limpiar un editor específico
-window.clearEditor = function(editorId) {
-    const editor = document.getElementById(editorId);
-    if (editor) {
-        editor.value = '';
-        runCode();
-    }
+// Función para limpiar un editor específico del Playground
+window.clearPlaygroundEditor = function(editorId) {
+    setEditorValueById(editorId, '');
+    window.runPlayground();
 };
 
 // Auto-ejecutar cuando el usuario deja de escribir (debounce)
 let typingTimer;
 const doneTypingInterval = 1000; // 1 segundo
 
-function setupAutoRun() {
+function setupPlaygroundAutoRun() {
     const editors = ['html-editor', 'css-editor', 'js-editor'];
     
+    // Listeners para textareas (fallback)
     editors.forEach(editorId => {
         const editor = document.getElementById(editorId);
         if (editor) {
             editor.addEventListener('input', function() {
                 clearTimeout(typingTimer);
-                typingTimer = setTimeout(runCode, doneTypingInterval);
+                typingTimer = setTimeout(window.runPlayground, doneTypingInterval);
             });
+        }
+    });
+
+    // Listeners para Monaco si está disponible
+    const { html, css, js } = window.__monacoEditors;
+    [html, css, js].forEach(ed => {
+        if (ed && ed.getModel) {
+            ed.getModel().onDidChangeContent(() => {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(window.runPlayground, doneTypingInterval);
+            });
+            if (window.monaco && window.monaco.KeyMod && window.monaco.KeyCode) {
+                ed.addCommand(window.monaco.KeyMod.CtrlCmd | window.monaco.KeyCode.Enter, () => {
+                    window.runPlayground();
+                });
+            }
         }
     });
 }
 
+// Inicializa los editores de Monaco (se invoca desde index tras cargar el loader)
+window.initMonacoEditors = function() {
+    if (!window.monaco) return;
+    const htmlContainer = document.getElementById('html-monaco');
+    const cssContainer = document.getElementById('css-monaco');
+    const jsContainer = document.getElementById('js-monaco');
+    if (!htmlContainer || !cssContainer || !jsContainer) return;
+
+    const initialHTML = document.getElementById('html-editor')?.value || '';
+    const initialCSS = document.getElementById('css-editor')?.value || '';
+    const initialJS = document.getElementById('js-editor')?.value || '';
+
+    const commonOpts = {
+        theme: 'vs-dark',
+        automaticLayout: true,
+        minimap: { enabled: false },
+        wordWrap: 'on',
+        fontSize: 14,
+        scrollBeyondLastLine: false,
+        tabSize: 2
+    };
+
+    window.__monacoEditors.html = window.monaco.editor.create(htmlContainer, {
+        value: initialHTML,
+        language: 'html',
+        ...commonOpts
+    });
+    window.__monacoEditors.css = window.monaco.editor.create(cssContainer, {
+        value: initialCSS,
+        language: 'css',
+        ...commonOpts
+    });
+    window.__monacoEditors.js = window.monaco.editor.create(jsContainer, {
+        value: initialJS,
+        language: 'javascript',
+        ...commonOpts
+    });
+
+    // Mostrar contenedores Monaco y ocultar textareas fallback
+    htmlContainer.style.display = 'block';
+    cssContainer.style.display = 'block';
+    jsContainer.style.display = 'block';
+    const htmlTA = document.getElementById('html-editor');
+    const cssTA = document.getElementById('css-editor');
+    const jsTA = document.getElementById('js-editor');
+    if (htmlTA) htmlTA.style.display = 'none';
+    if (cssTA) cssTA.style.display = 'none';
+    if (jsTA) jsTA.style.display = 'none';
+
+    setupPlaygroundAutoRun();
+    window.runPlayground();
+};
+
 // Inicializar el playground
 setTimeout(() => {
     if (document.getElementById('playground')) {
-        setupAutoRun();
-        runCode();
+        setupPlaygroundAutoRun();
+        window.runPlayground();
     }
 }, 500);
