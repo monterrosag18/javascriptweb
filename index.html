@@ -29,10 +29,13 @@
             
             <div id="playground">
                 <div class="editors">
-                    <div class="editor-container">
+                    <div class="editor-container" id="html-container">
                         <div class="editor-header">
                             <span class="editor-title">📄 HTML</span>
-                            <button class="clear-btn" onclick="clearPlaygroundEditor('html-editor')">Limpiar</button>
+                            <div class="editor-actions">
+                                <button class="expand-btn" onclick="toggleExpandEditor('html-editor', 'html-monaco')" title="Expandir">⬆️</button>
+                                <button class="clear-btn" onclick="clearPlaygroundEditor('html-editor')">Limpiar</button>
+                            </div>
                         </div>
                         <!-- Monaco container (autocompletado); el textarea queda como fallback/estado -->
                         <div id="html-monaco" class="monaco-container"></div>
@@ -42,10 +45,13 @@
 <button id="miBoton">Haz clic</button></textarea>
                     </div>
                     
-                    <div class="editor-container">
+                    <div class="editor-container" id="css-container">
                         <div class="editor-header">
                             <span class="editor-title">🎨 CSS</span>
-                            <button class="clear-btn" onclick="clearPlaygroundEditor('css-editor')">Limpiar</button>
+                            <div class="editor-actions">
+                                <button class="expand-btn" onclick="toggleExpandEditor('css-editor', 'css-monaco')" title="Expandir">⬆️</button>
+                                <button class="clear-btn" onclick="clearPlaygroundEditor('css-editor')">Limpiar</button>
+                            </div>
                         </div>
                         <div id="css-monaco" class="monaco-container"></div>
                         <textarea id="css-editor" placeholder="Escribe tu CSS aquí...">/* Ejemplo: */
@@ -68,10 +74,13 @@ button {
 }</textarea>
                     </div>
                     
-                    <div class="editor-container">
+                    <div class="editor-container" id="js-container">
                         <div class="editor-header">
                             <span class="editor-title">⚡ JavaScript</span>
-                            <button class="clear-btn" onclick="clearPlaygroundEditor('js-editor')">Limpiar</button>
+                            <div class="editor-actions">
+                                <button class="expand-btn" onclick="toggleExpandEditor('js-editor', 'js-monaco')" title="Expandir">⬆️</button>
+                                <button class="clear-btn" onclick="clearPlaygroundEditor('js-editor')">Limpiar</button>
+                            </div>
                         </div>
                         <div id="js-monaco" class="monaco-container"></div>
                         <textarea id="js-editor" placeholder="Escribe tu JavaScript aquí...">// Ejemplo:
@@ -90,6 +99,18 @@ boton.addEventListener('click', function() {
                         <button class="refresh-btn" onclick="runPlayground()">▶️ Ejecutar</button>
                     </div>
                     <iframe id="preview"></iframe>
+                </div>
+                
+                <!-- Modal para editor expandido -->
+                <div id="expanded-editor-modal" class="expanded-editor-modal" style="display:none;">
+                    <div class="expanded-editor-content">
+                        <div class="expanded-editor-header">
+                            <span id="expanded-title">Editor</span>
+                            <button class="close-expand-btn" onclick="closeExpandEditor()">✕</button>
+                        </div>
+                        <div id="expanded-monaco" class="expanded-monaco-container"></div>
+                        <textarea id="expanded-textarea" class="expanded-textarea" style="display:none;"></textarea>
+                    </div>
                 </div>
             </div>
         </section>

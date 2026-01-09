@@ -434,3 +434,124 @@ setTimeout(() => {
         window.runPlayground();
     }
 }, 500);
+
+// ========================================
+// EDITOR EXPANDIDO - MODAL DE PANTALLA COMPLETA
+// ========================================
+
+window.expandedEditorState = {
+    editorId: null,
+    monacoId: null,
+    expandedEditor: null
+};
+
+window.toggleExpandEditor = function(editorId, monacoId) {
+    const modal = document.getElementById('expanded-editor-modal');
+    const expandedMonaco = document.getElementById('expanded-monaco');
+    const expandedTitle = document.getElementById('expanded-title');
+    
+    if (!modal) return;
+    
+    // Guardar estado
+    window.expandedEditorState.editorId = editorId;
+    window.expandedEditorState.monacoId = monacoId;
+    
+    // Limpiar contenedor expandido
+    expandedMonaco.innerHTML = '';
+    
+    // Mapeo de títulos
+    const titles = {
+        'html-editor': '📄 HTML - Modo Expandido',
+        'css-editor': '🎨 CSS - Modo Expandido',
+        'js-editor': '⚡ JavaScript - Modo Expandido'
+    };
+    expandedTitle.textContent = titles[editorId] || 'Editor';
+    
+    // Si Monaco existe en el editor original, crear uno nuevo en la modal
+    const originalEditor = window.__monacoEditors[
+        editorId === 'html-editor' ? 'html' :
+        editorId === 'css-editor' ? 'css' : 'js'
+    ];
+    
+    if (originalEditor && window.monaco) {
+        const language = 
+            editorId === 'html-editor' ? 'html' :
+            editorId === 'css-editor' ? 'css' : 'javascript';
+        
+        const expandedOpts = {
+            value: originalEditor.getValue(),
+            language: language,
+            theme: 'vs-dark',
+            automaticLayout: true,
+            minimap: { enabled: false },
+            wordWrap: 'on',
+            fontSize: 16,
+            scrollBeyondLastLine: false,
+            tabSize: 2
+        };
+        
+        window.expandedEditorState.expandedEditor = window.monaco.editor.create(expandedMonaco, expandedOpts);
+        
+        // Sincronizar cambios con el editor original en tiempo real
+        if (window.expandedEditorState.expandedEditor.getModel) {
+            window.expandedEditorState.expandedEditor.getModel().onDidChangeContent(() => {
+                originalEditor.setValue(window.expandedEditorState.expandedEditor.getValue());
+                window.runPlayground();
+            });
+        }
+    } else {
+        // Fallback: usar textarea
+        const textarea = document.getElementById('expanded-textarea');
+        const originalTA = document.getElementById(editorId);
+        if (textarea && originalTA) {
+            textarea.value = originalTA.value;
+            textarea.style.display = 'block';
+            textarea.focus();
+            
+            // Sincronizar cambios
+            textarea.addEventListener('input', function() {
+                originalTA.value = textarea.value;
+                window.runPlayground();
+            });
+        }
+    }
+    
+    modal.style.display = 'flex';
+};
+
+window.closeExpandEditor = function() {
+    const modal = document.getElementById('expanded-editor-modal');
+    if (!modal) return;
+    
+    // Sincronizar valor de vuelta al editor original si es necesario
+    const textarea = document.getElementById('expanded-textarea');
+    const state = window.expandedEditorState;
+    if (state.editorId && textarea && textarea.style.display !== 'none') {
+        const originalTA = document.getElementById(state.editorId);
+        if (originalTA) {
+            originalTA.value = textarea.value;
+        }
+    }
+    
+    // Destruir editor expandido
+    if (state.expandedEditor && state.expandedEditor.dispose) {
+        state.expandedEditor.dispose();
+    }
+    state.expandedEditor = null;
+    
+    // Limpiar textarea
+    textarea.value = '';
+    textarea.style.display = 'none';
+    
+    modal.style.display = 'none';
+};
+
+// Cerrar modal con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('expanded-editor-modal');
+        if (modal && modal.style.display === 'flex') {
+            window.closeExpandEditor();
+        }
+    }
+});

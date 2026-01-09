@@ -255,6 +255,28 @@ footer {
     gap: 5px;
 }
 
+.editor-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.expand-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.expand-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
 .clear-btn {
     background: rgba(255, 255, 255, 0.2);
     color: white;
@@ -350,6 +372,91 @@ footer {
     border: none;
     background: white;
     display: block;
+}
+
+/* Modal para editor expandido */
+.expanded-editor-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.expanded-editor-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.expanded-editor-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 12px 12px 0 0;
+}
+
+.close-expand-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.close-expand-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.expanded-monaco-container {
+    flex: 1;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+}
+
+.expanded-textarea {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    resize: none;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    background: #282c34;
+    color: #abb2bf;
+    outline: none;
 }
 
 /* Responsive para playground */
