@@ -13,22 +13,22 @@ content.innerHTML = `
             <p><strong>Ejemplo:</strong> Pide tu ubicación y muéstrala.</p>
             <button onclick="obtenerUbicacion()">Obtener mi Ubicación</button>
             <div class="output" id="output-geolocation"></div>
-            <textarea id="code-geolocation" readonly>// Función que se ejecuta si el usuario acepta
+                        <textarea id="code-geolocation" readonly>// Función que se ejecuta si el usuario acepta
 function exito(posicion) {
     const crd = posicion.coords;
     const output = document.getElementById('output-geolocation');
 
     output.innerHTML = '<strong>¡Ubicación encontrada!</strong><br>';
-    output.innerHTML += \`Latitud: \${crd.latitude}<br>\`;
-    output.innerHTML += \`Longitud: \${crd.longitude}<br>\`;
-    output.innerHTML += \`Precisión: \${crd.accuracy} metros.<br>\`;
-    output.innerHTML += \`<a href="https://www.openstreetmap.org/#map=18/\${crd.latitude}/\${crd.longitude}" target="_blank">Ver en un mapa</a>\`;
+    output.innerHTML += 'Latitud: ' + crd.latitude + '<br>';
+    output.innerHTML += 'Longitud: ' + crd.longitude + '<br>';
+    output.innerHTML += 'Precisión: ' + crd.accuracy + ' metros.<br>';
+    output.innerHTML += 'Ver en un mapa: https://www.openstreetmap.org/#map=18/' + crd.latitude + '/' + crd.longitude;
 }
 
 // Función que se ejecuta si el usuario deniega o hay un error
 function error(err) {
     const output = document.getElementById('output-geolocation');
-    output.innerHTML = \`<span style="color: red;">ERROR(\${err.code}): \${err.message}</span>\`;
+    output.innerHTML = 'ERROR(' + err.code + '): ' + err.message;
 }
 
 // Llamada principal a la API
@@ -36,7 +36,7 @@ function obtenerUbicacion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(exito, error);
     } else {
-        document.getElementById('output-geolocation').innerHTML = "La geolocalización no es soportada por este navegador.";
+        document.getElementById('output-geolocation').innerHTML = 'La geolocalización no es soportada por este navegador.';
     }
 }
 </textarea>
@@ -50,40 +50,33 @@ function obtenerUbicacion() {
             <button onclick="iniciarSeguimiento()">Iniciar Seguimiento</button>
             <button onclick="detenerSeguimiento()">Detener Seguimiento</button>
             <div class="output" id="output-watch-position"></div>
-            <textarea id="code-watch-position" readonly>// Variable para guardar el ID del observador
+                        <textarea id="code-watch-position" readonly>// Variable para guardar el ID del observador
 let watchId = null;
 const output = document.getElementById('output-watch-position');
 
 function iniciarSeguimiento() {
-    output.innerHTML = "Iniciando seguimiento... Esperando cambios de ubicación.";
-    
-    const opciones = {
-        enableHighAccuracy: true, // Pide la máxima precisión posible
-        timeout: 5000,            // Tiempo máximo de espera por una respuesta
-        maximumAge: 0             // No usar una ubicación en caché
-    };
+    output.innerHTML = 'Iniciando seguimiento... Esperando cambios de ubicación.';
+    const opciones = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
     if (navigator.geolocation) {
         watchId = navigator.geolocation.watchPosition(posicion => {
             const { latitude, longitude } = posicion.coords;
-            output.innerHTML = \`Última actualización:<br>
-                               Latitud: \${latitude}<br>
-                               Longitud: \${longitude}\`;
+            output.innerHTML = 'Última actualización:<br>Latitud: ' + latitude + '<br>Longitud: ' + longitude;
         }, err => {
-            output.innerHTML = \`Error de seguimiento: \${err.message}\`;
+            output.innerHTML = 'Error de seguimiento: ' + err.message;
         }, opciones);
-        console.log("Seguimiento iniciado con ID:", watchId);
+        console.log('Seguimiento iniciado con ID:', watchId);
     }
 }
 
 function detenerSeguimiento() {
     if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
-        output.innerHTML = "Seguimiento detenido.";
-        console.log("Seguimiento con ID", watchId, "detenido.");
+        output.innerHTML = 'Seguimiento detenido.';
+        console.log('Seguimiento con ID', watchId, 'detenido.');
         watchId = null;
     } else {
-        output.innerHTML = "El seguimiento no estaba iniciado.";
+        output.innerHTML = 'El seguimiento no estaba iniciado.';
     }
 }
 </textarea>
@@ -98,14 +91,14 @@ window.obtenerUbicacion = function() {
     function exito(posicion) {
         const crd = posicion.coords;
         output.innerHTML = '<strong>¡Ubicación encontrada!</strong><br>';
-        output.innerHTML += \`Latitud: \${crd.latitude}<br>\`;
-        output.innerHTML += \`Longitud: \${crd.longitude}<br>\`;
-        output.innerHTML += \`Precisión: \${crd.accuracy} metros.<br>\`;
-        output.innerHTML += \`<a href="https://www.openstreetmap.org/#map=18/\${crd.latitude}/\${crd.longitude}" target="_blank">Ver en un mapa</a>\`;
+        output.innerHTML += 'Latitud: ' + crd.latitude + '<br>';
+        output.innerHTML += 'Longitud: ' + crd.longitude + '<br>';
+        output.innerHTML += 'Precisión: ' + crd.accuracy + ' metros.<br>';
+        output.innerHTML += 'Ver en un mapa: https://www.openstreetmap.org/#map=18/' + crd.latitude + '/' + crd.longitude;
     }
 
     function error(err) {
-        output.innerHTML = \`<span style="color: red;">ERROR(\${err.code}): \${err.message}</span>\`;
+        output.innerHTML = 'ERROR(' + err.code + '): ' + err.message;
     }
 
     if (navigator.geolocation) {

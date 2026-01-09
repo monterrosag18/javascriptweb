@@ -42,7 +42,7 @@ console.log(dato);
         <p>Como solo se pueden guardar strings, si quieres guardar un objeto, primero debes convertirlo a un string JSON, y para leerlo, debes hacer el proceso inverso.</p>
         <div class="example">
             <p><strong>Ejemplo:</strong> Guardar un objeto de configuración.</p>
-            <textarea id="code-storage-object">const configuracion = {
+            <textarea id="code-storage-object" readonly>const configuracion = {
     tema: "oscuro",
     idioma: "es"
 };
@@ -67,39 +67,37 @@ console.log("Tema recuperado:", configRecuperada.tema);
         
         <div class="example">
             <p><strong>Ejemplo:</strong> Guardamos un objeto de configuración del usuario en <code>localStorage</code>. Para ello, usamos <code>JSON.stringify()</code> para convertir el objeto en string, y <code>JSON.parse()</code> para reconstruir el objeto al leerlo.</p>
-            <textarea id="code-advanced-storage">// 1. El objeto que queremos guardar
+                        <textarea id="code-advanced-storage" readonly>// 1. El objeto que queremos guardar
 const configuracionUsuario = {
-    tema: "oscuro",
-    idioma: "es",
+    tema: 'oscuro',
+    idioma: 'es',
     notificaciones: true,
-    ultimoAcceso: new Date().toLocaleTimeString()
+    ultimoAcceso: new Date().toLocaleTimeString(),
 };
 
 // 2. Convertimos el objeto a un string JSON y lo guardamos
 try {
     const configString = JSON.stringify(configuracionUsuario);
     localStorage.setItem('configUsuario', configString);
-    console.log("Objeto de configuración guardado en localStorage.");
-    console.log("Como string:", configString);
+    console.log('Objeto de configuración guardado en localStorage.');
+    console.log('Como string:', configString);
 } catch (e) {
-    console.error("Error al guardar:", e);
+    console.error('Error al guardar:', e);
 }
-
 
 // 3. Leemos el string de localStorage y lo volvemos a convertir en un objeto
 try {
     const configGuardadaString = localStorage.getItem('configUsuario');
     if (configGuardadaString) {
         const configRecuperada = JSON.parse(configGuardadaString);
-        console.log("Objeto recuperado de localStorage:");
+        console.log('Objeto recuperado de localStorage:');
         console.log(configRecuperada);
-        console.log(`El tema guardado es: {configRecuperada.tema}`);
+        console.log('El tema guardado es: ' + configRecuperada.tema);
     } else {
-        console.log("No se encontró configuración guardada.");
+        console.log('No se encontró configuración guardada.');
     }
 } catch (e) {
-    // Este error puede ocurrir si los datos en localStorage no son un JSON válido
-    console.error("Error al parsear la configuración:", e);
+    console.error('Error al parsear la configuración:', e);
 }
 </textarea>
             <button onclick="runCode('code-advanced-storage')">Ejecutar</button>
@@ -112,16 +110,16 @@ window.guardarNombre = function() {
     const nombre = document.getElementById('nombreInput').value;
     if (nombre) {
         localStorage.setItem('nombreUsuario', nombre);
-        document.getElementById('output-storage').textContent = \`Nombre '\${nombre}' guardado en localStorage.\`;
+        document.getElementById('output-storage').textContent = "Nombre '" + nombre + "' guardado en localStorage.";
     } else {
         document.getElementById('output-storage').textContent = 'Por favor, escribe un nombre.';
     }
-}
+};
 
 window.recuperarNombre = function() {
     const nombreGuardado = localStorage.getItem('nombreUsuario');
     if (nombreGuardado) {
-        document.getElementById('output-storage').textContent = \`Nombre recuperado: \${nombreGuardado}\`;
+        document.getElementById('output-storage').textContent = 'Nombre recuperado: ' + nombreGuardado;
     } else {
         document.getElementById('output-storage').textContent = 'No hay ningún nombre guardado.';
     }
